@@ -5,45 +5,50 @@ import java.util.StringJoiner;
 public class MyArrayList<T> {
 
     private static final int INIT_SIZE = 10;
-    private int counter = 0;
+    private int size = 0;
     private Object[] array = new Object[INIT_SIZE];
 
     public void add(T value) {
-        if (counter >= array.length) {
-            Object[] newArray = new Object[(int) (array.length * 1.5)];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+        if (size == array.length) {
+            Object[] newArray = new Object[(int) (size * 1.5)];
+            System.arraycopy(array, 0, newArray, 0, size);
             array = newArray;
         }
-        array[counter++] = value;
+        array[size++] = value;
     }
 
-    public void remove(int index) {
-        if (index > counter & index < 0) {
+    public T remove(int index) {
+        if (index > size && index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        System.arraycopy(array, index + 1, array, index, counter - index - 1);
-        array[counter--] = null;
-    }
-
-    public void clear() {
-        Object[] array = {};
-        this.array = array;
-    }
-
-    public int size() {
-        return counter;
+        T removedElement = (T) array[index];
+        array[index] = null;
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        size--;
+        return removedElement;
     }
 
     public T get(int index) {
-        if (index > counter & index < 0) {
+        if (index > size && index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
         return (T) array[index];
     }
 
+    public void clear() {
+        for (int i = 0; i < array.length; i++) {
+            array[i] = null;
+        }
+        size = 0;
+    }
+
+    public int size() {
+        return this.size;
+    }
+
     public String toString() {
         StringJoiner result = new StringJoiner(", ");
-        for (int i = 0; i < counter; i += 1) {
+        for (int i = 0; i < size; i += 1) {
             result.add(array[i].toString());
         }
         return "[" + result + "]";

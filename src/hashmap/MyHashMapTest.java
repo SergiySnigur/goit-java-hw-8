@@ -1,20 +1,30 @@
 package hashmap;
 
 public class MyHashMapTest {
+
     public static void main(String[] args) {
-        MyHashMap<Integer, String> hashMap = new MyHashMap<>();
+        MyHashMap<Integer, String> myHashMap = new MyHashMap<>();
 
-        hashMap.put(1, "Serhii");
-        hashMap.put(3, "Andrew");
-        hashMap.put(4, "Kate");
-        hashMap.put(5, "aaa");
-        hashMap.put(6, "bbb");
-        hashMap.put(7, "sss");
-        hashMap.put(8, "bbb");
+        myHashMap.put(1, "Monday");
+        myHashMap.put(2, "Tuesday");
+        myHashMap.put(3, "Wednesday");
 
-        System.out.println(hashMap.get(4));
-        System.out.println(hashMap.size());
-//        hashMap.remove(4);
-//        System.out.println(hashMap.size());
+        System.out.println(myHashMap.size());
+
+        System.out.println(myHashMap.get(1));
+        System.out.println(myHashMap.get(3));
+        myHashMap.remove(3);
+        System.out.println(myHashMap.size());
+
+        myHashMap.clear();
+        System.out.println(myHashMap.size());
+
+        myHashMap.put(1, "January");
+        myHashMap.put(2, "February");
+        myHashMap.put(3, "March");
+        System.out.println(myHashMap.size());
+        System.out.println(myHashMap.get(3));
+
+        System.out.println(myHashMap);
     }
 }

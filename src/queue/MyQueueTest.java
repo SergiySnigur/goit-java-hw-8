@@ -3,15 +3,27 @@ package queue;
 
 public class MyQueueTest {
     public static void main(String[] args) {
-        MyQueue<Integer> queue = new MyQueue<>();
-        queue.add(1);
-        queue.add(2);
-        queue.add(3);
-        queue.add(4);
-        queue.add(5);
-        queue.add(6);
-        System.out.println(queue.toString());
-        System.out.println(queue.poll());
-        System.out.println(queue.toString());
+        MyQueue<Integer> myQueue = new MyQueue<>();
+
+        myQueue.add(1);
+        myQueue.add(2);
+        myQueue.add(3);
+        myQueue.add(4);
+        myQueue.add(5);
+        myQueue.add(6);
+        myQueue.add(7);
+
+        System.out.println(myQueue.remove(0));
+        System.out.println(myQueue.toString());
+        System.out.println("********************");
+        System.out.println(myQueue.remove(0));
+        System.out.println(myQueue.toString());
+        System.out.println("********************");
+        System.out.println(myQueue.remove(0));
+        System.out.println(myQueue.toString());
+        System.out.println("********************");
+        System.out.println(myQueue.remove(0));
+        System.out.println(myQueue.toString());
+
     }
 }

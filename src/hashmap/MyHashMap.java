@@ -1,98 +1,105 @@
 package hashmap;
 
-public class MyHashMap<K, V> {
-    private Node<K, V>[] table;
-    private int capacity = 4;
-    private int size;
+import java.util.Arrays;
 
-    public MyHashMap() {
-        this.table = new Node[capacity];
+class MyHashMap<K, V> {
+    private int size;
+    private int DEFAULT_CAPACITY = 16;
+    private MyEntry<K, V>[] values = new MyEntry[DEFAULT_CAPACITY];
+
+
+    public V get(K key) {
+        for (int i = 0; i < size; i++) {
+            if (values[i] != null) {
+                if (values[i].getKey().equals(key)) {
+                    return values[i].getValue();
+                }
+            }
+        }
+        return null;
     }
 
     public void put(K key, V value) {
-        if (key == null) return;
-        int index = hash(key);
-        Node<K, V> newNode = new Node<>(key, value, null);
-        if (table[index] == null) {
-            table[index] = newNode;
-        } else {
-            Node<K, V> prev = null;
-            Node<K, V> current = table[index];
-            while (current != null) {
-                if (current.getKey().equals(key)) {
-                    if (prev == null) {
-                        newNode.setNextNode(current.getNextNode());
-                        table[index] = newNode;
-                        return;
-                    } else {
-                        newNode.setNextNode(current.getNextNode());
-                        prev.setNextNode(newNode);
-                        return;
-                    }
-                }
-                prev = current;
-                current = current.getNextNode();
+        boolean insert = true;
+        for (int i = 0; i < size; i++) {
+            if (values[i].getKey().equals(key)) {
+                values[i].setValue(value);
+                insert = false;
             }
-            prev.setNextNode(newNode);
         }
-        size++;
-    }
-
-    public V get(K key) {
-        int hash = hash(key);
-        if (table[hash] == null) {
-            return null;
-        } else {
-            Node<K, V> temp = table[hash];
-            while (temp != null) {
-                if (temp.getKey().equals(key))
-                    return temp.getValue();
-                temp = temp.getNextNode();
-            }
-            return null;
+        if (insert) {
+            checkCapacity();
+            values[size++] = new MyEntry<K, V>(key, value);
         }
     }
 
-    public void remove(K key) {
-
-        if (key == null) {
-            throw new IllegalArgumentException("Null Key!");
-        }
-
-        int hash = hash(key);
-
-        if (table[hash] == null) {
-        } else {
-            Node<K, V> previous = null;
-            Node<K, V> current = table[hash];
-
-            while (current != null) {
-                if (current.getValue().equals(key)) {
-                    if (previous == null) {
-                        table[hash] = table[hash].getNextNode();
-                    } else {
-                        previous.setNextNode(current.getNextNode());
-                    }
-                }
-                previous = current;
-                current = current.getNextNode();
-            }
-            this.size--;
+    private void checkCapacity() {
+        if (size == values.length) {
+            int newSize = values.length * 2;
+            values = Arrays.copyOf(values, newSize);
         }
     }
 
     public int size() {
-        return this.size;
+        return size;
     }
 
-    public int hash(K key) {
-        return key.hashCode() % capacity;
+    public void remove(K key) {
+        for (int i = 0; i < size; i++) {
+            if (values[i].getKey().equals(key)) {
+                values[i] = null;
+                size--;
+                increaseArray(i);
+            }
+        }
     }
 
     public void clear() {
-        this.table = null;
-        this.size = 0;
-        System.out.println("Is clear");
+        values = new MyEntry[DEFAULT_CAPACITY];
+        size = 0;
+        return;
+    }
+
+
+    private void increaseArray(int start) {
+        for (int i = start; i < size; i++) {
+            values[i] = values[i + 1];
+        }
+    }
+
+
+    @Override
+    public String toString() {
+        for (int i = 0; i < values.length - 1; i++) {
+            while (values[i] != null) {
+                System.out.println(values[i].getKey() + ": " + values[i].getValue());
+                break;
+            }
+        }
+        return "";
+    }
+
+
+    public class MyEntry<K, V> {
+        private final K key;
+        private V value;
+
+        public MyEntry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
+
+        public void setValue(V value) {
+            this.value = value;
+        }
     }
 }
 

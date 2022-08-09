@@ -1,63 +1,136 @@
 package linkedlist;
 
-public class MyLinkedList<E> {
-    private Node<E> firstNode;
-    private Node<E> lastNode;
-    private int size = 0;
+public class MyLinkedList<T> {
+    private Node<T> first;
+    private Node<T> last;
+    private int size;
 
-    public MyLinkedList() {
-        this.lastNode = new Node(null, this.firstNode, null);
-        this.firstNode = new Node<>(null, null, this.lastNode);
+
+    public void add(T item) {
+        Node<T> node = new Node(item);
+
+        if (first == null) {
+            first = node;
+            last = node;
+            node.prev = null;
+            node.next = null;
+        } else {
+            last.next = node;
+            node.prev = last;
+            last = node;
+        }
+        size++;
     }
 
-    public void add(E value) {
-        Node<E> prev = this.lastNode;
-        prev.setCurrentElement(value);
-        this.lastNode = new Node<E>(null, prev, null);
-        prev.setNextElement(this.lastNode);
-        this.size++;
-    }
-
-    public E remove(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Position is Invalid");
-        }
-        Node<E> target = this.firstNode.getNextElement();
-        for (int i = 0; i < index; i += 1) {
-            target = (Node<E>) getNode(target);
-        }
-        Node<E> prevNode = target.getPrevElement();
-        Node<E> nextNode = target.getNextElement();
-        prevNode.setNextElement(nextNode);
-        nextNode.setPrevElement(prevNode);
-        size--;
-        return target.getCurrentElement();
+    public int getSize() {
+        return size;
     }
 
     public void clear() {
-        this.firstNode = null;
-        this.lastNode = null;
-        this.size = 0;
-        System.out.println("Is clear!");
+        first = null;
+        size = 0;
+        return;
     }
 
-    public int size() {
-        return this.size;
-    }
-
-    public E get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Position is Invalid");
+    public T getIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index + ", Size: " + getSize());
         }
-        Node<E> target = this.firstNode.getNextElement();
-        for (int i = 0; i < index; i += 1) {
-            target = (Node<E>) getNode(target);
+
+        int i = -1;
+        Node<T> cur = first;
+
+        while (cur != null) {
+            if (i == index - 1) {
+                return cur.getValue();
+            }
+            cur = cur.getNext();
+            i++;
         }
-        return target.getCurrentElement();
+        return null;
     }
 
-    // use in method E get(int index) and E remove(int index)
-    public E getNode(Node<E> node) {
-        return (E) node.getNextElement();
+    public void remove(int index) {
+
+        if (index < 0 || index >= getSize()) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index + ", Size: " + getSize());
+        }
+        int i = -1;
+        Node<T> cur = first;
+
+        while (cur != null) {
+            if(index != 0) {
+
+                if (i == index - 1) {
+                    if (cur.prev != null) {
+                        cur.prev.next = cur.next;
+                    }
+                    if (cur.next != null) {
+                        cur.next.prev = cur.prev;
+                    }
+                }
+            }else{
+                first = first.next;
+                break;
+            }
+            cur = cur.next;
+            i++;
+        }
+        size--;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Node<T> cur = first;
+
+        if (cur != null) {
+            sb.append(cur.getValue() + " -> ");
+            while (cur.getNext() != null) {
+                sb.append(cur.getNext().getValue() + " -> ");
+                cur = cur.getNext();
+            }
+            String result = sb.substring(0, sb.length() - 4);
+            return result;
+        }
+        return null;
+
+    }
+
+    public class Node<T> {
+        T value;
+        Node<T> next ;
+        Node<T> prev ;
+
+
+        public Node(T value) {
+            this.value = value;
+
+
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+
+        public Node<T> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<T> next) {
+            this.next = next;
+        }
+
+        public Node<T> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<T> prev) {
+            this.prev = prev;
+        }
     }
 }

@@ -1,77 +1,74 @@
 package queue;
 
-
-import java.util.EmptyStackException;
+import java.util.NoSuchElementException;
 import java.util.StringJoiner;
 
 public class MyQueue<T> {
 
-    private int counter = 0;
-    private Object[] elements = new Object[counter];
+    private int size = 0;
+    private Object[] elements = new Object[size];
 
     public void add(T value) {
         if (value == null) {
             throw new NullPointerException();
-        } else {
-            Object[] array = new Object[counter + 1];
-            System.arraycopy(this.elements, 0, array, 0, this.elements.length);
-            this.elements = array;
-            this.elements[counter++] = value;
         }
-    }
-
-    public T remove(int index) {
-        if (index > this.elements.length & index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else {
-            Object result = this.elements[index];
-            Object[] array = new Object[this.elements.length - 1];
-            for (int i = 0, j = 0; i < this.elements.length; i += 1) {
-                if (i == index) {
-                    continue;
-                } else {
-                    array[j++] = this.elements[i];
-                }
-            }
-            this.elements = array;
-            return (T) result;
-        }
-    }
-
-    public void clear() {
-        Object[] array = {};
-        this.elements = array;
-    }
-
-    public int size() {
-        return this.elements.length;
+        Object[] array = new Object[size + 1];
+        System.arraycopy(elements, 0, array, 0, size);
+        elements = array;
+        elements[size++] = value;
     }
 
     public T peek() {
-        if (this.elements.length == 0) {
+        if (size == 0) {
             return null;
-        } else {
-            return (T) this.elements[0];
         }
+        return (T) elements[0];
     }
 
     public T poll() {
-        if (this.elements.length == 0) {
-            throw new EmptyStackException();
-        } else {
-            Object result = this.elements[0];
-            Object[] array = new Object[this.elements.length - 1];
-            System.arraycopy(this.elements, 1, array, 0, this.elements.length - 1);
-            this.elements = array;
-            return (T) result;
+        if (size == 0) {
+            return null;
+        }
+        Object result = elements[0];
+        Object[] array = new Object[size - 1];
+        System.arraycopy(elements, 1, array, 0, size - 1);
+        elements = array;
+        size--;
+        return (T) result;
+    }
+
+    public T remove(int index) {
+        if (size == 0) {
+            throw new NoSuchElementException();
         }
 
+        if (index > size & index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        T removedElement = (T) elements[index];
+        elements[index] = null;
+        Object[] newArray = new Object[size - 1];
+        System.arraycopy(elements, index + 1, newArray, index, size - index - 1);
+        elements = newArray;
+        size--;
+        return removedElement;
+    }
+
+    public void clear() {
+        for (int i = 0; i < size; i++) {
+            elements[i] = null;
+        }
+        size = 0;
+    }
+
+    public int size() {
+        return size;
     }
 
     public String toString() {
         StringJoiner result = new StringJoiner(", ");
-        for (int i = 0; i < this.elements.length; i += 1) {
-            result.add(elements[i].toString());
+        for (Object element : elements) {
+            result.add(element.toString());
         }
         return "[" + result + "]";
     }

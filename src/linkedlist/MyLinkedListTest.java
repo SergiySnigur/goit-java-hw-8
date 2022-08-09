@@ -2,14 +2,32 @@ package linkedlist;
 
 public class MyLinkedListTest {
     public static void main(String[] args) {
-        MyLinkedList<String> list = new MyLinkedList<>();
-        list.add("Serhii");
-        list.add("Kate");
-        list.add("Andrew");
-        System.out.println(list.get(0));
-        System.out.println(list.size());
-        System.out.println(list.remove(3));
+
+        MyLinkedList<Object> list = new MyLinkedList<>();
+
+
+        list.add("Hello");
+        list.add(123);
+        list.add(98);
+        list.add("Link");
+        list.add("Yo");
+        System.out.println("list = " + list);
+        System.out.println("list.getSize() = " + list.getSize());
+        System.out.println("list.getIndex(0) = " + list.getIndex(0));
+        System.out.println("list.getIndex(1) = " + list.getIndex(1));
+        System.out.println("list.getIndex(2) = " + list.getIndex(2));
+
+        //list.clear();
+
+        System.out.println("list = " + list);
+        System.out.println("list.getSize() = " + list.getSize());
+
+
+        System.out.println("list.getIndex(3) = " + list.getIndex(3));
+        list.remove(3);
+        System.out.println("list = " + list);
+        System.out.println("list.getSize() = " + list.getSize());
         list.clear();
-        System.out.println(list.size());
+        System.out.println(list);
     }
 }
